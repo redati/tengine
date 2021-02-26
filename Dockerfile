@@ -191,11 +191,8 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 #limpeza
 
 
-RUN echo "tzdata tzdata/Areas select Europe" > timezone.txt
-RUN echo "tzdata tzdata/Zones/Europe select Rome" >> timezone.txt
-RUN debconf-set-selections timezone.txt
-RUN rm /etc/timezone
-RUN rm /etc/localtime
+
+RUN echo "America/Sao_Paulo" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
 RUN apt-get remove -y gcc flex make bison build-essential pkg-config \
