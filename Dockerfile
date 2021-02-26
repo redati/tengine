@@ -1,4 +1,4 @@
-# docker build -t misaelgomes/tengine-php74 .
+# docker build -t misaelgomes/tengine .
 # docker run -d -p 3142:3142 misaelgomes/eg_apt_cacher_ng
 # acessar localhost:3142 copiar proxy correto e colar abaixo em Acquire
 # docker run -d -p 80:80 misaelgomes/tengine-php74
@@ -82,13 +82,14 @@ ENV CONFIG "\
 VOLUME ["/var/cache/apt-cacher-ng"]
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/Sao_Paulo
 
 # add-apt-repository depend software-properties-common
 RUN apt-get update && apt-get install -y software-properties-common \
                    && add-apt-repository -y ppa:maxmind/ppa 
 
 RUN  apt-get update \
-                && apt-get install -y tzdata \
+                && apt-get install -y tzdata apt-utils locales \
                 && apt-get install -y \
                 nginx-common libmaxminddb0 libmaxminddb-dev mmdb-bin nano \
                 gcc flex make bison build-essential pkg-config g++ libtool automake autoconf git \
@@ -188,6 +189,14 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 #        && pecl install lzf vips
 
 #limpeza
+
+
+RUN echo "tzdata tzdata/Areas select Europe" > timezone.txt
+RUN echo "tzdata tzdata/Zones/Europe select Rome" >> timezone.txt
+RUN debconf-set-selections timezone.txt
+RUN rm /etc/timezone
+RUN rm /etc/localtime
+RUN dpkg-reconfigure -f noninteractive tzdata
 
 RUN apt-get remove -y gcc flex make bison build-essential pkg-config \
         g++ libtool automake autoconf software-properties-common
