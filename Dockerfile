@@ -104,6 +104,8 @@ RUN  apt-get update \
                 zlib1g-dev \
                 curl \
                 libxslt-dev \
+                libgd-tools \
+                libgd3 \
                 libgd-dev \
                 libgeoip-dev 
 
