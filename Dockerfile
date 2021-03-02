@@ -195,6 +195,10 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 RUN echo "America/Sao_Paulo" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
+RUN apt-get install cron
+
+RUN apt-get upgrade -y
+
 RUN apt-get remove -y gcc flex make bison build-essential pkg-config \
         g++ libtool automake autoconf software-properties-common
 RUN apt-get remove --purge --auto-remove -y \
@@ -204,6 +208,7 @@ RUN apt-get remove --purge --auto-remove -y \
 RUN rm -fr /tmp/*
 
 RUN mkdir -p /var/cache/nginx/
+RUN mkdir -p /etc/nginx/extras
 RUN nginx -t
 
 CMD nginx -g 'daemon off;'
