@@ -47,7 +47,6 @@ ENV CONFIG "\
         --with-http_stub_status_module \
         --with-http_auth_request_module \
         --with-http_xslt_module \
-        --with-http_image_filter_module \
         --with-threads \
         --with-stream \
         --with-stream_ssl_module \
@@ -70,6 +69,7 @@ ENV CONFIG "\
         --add-module=modules/ngx_http_sysguard_module \
         --add-module=modules/ngx_http_slice_module \
 	--add-module=modules/ngx_http_upstream_session_sticky_module \
+        --add-module=modules/ngx_aws_auth \
         --add-module=modules/ngx_devel_kit-master \
         --add-module=modules/set-misc-nginx-module-master \
         --add-module=modules/ngx_http_geoip2_module-master  \
@@ -89,7 +89,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
                    && add-apt-repository -y ppa:maxmind/ppa 
 
 RUN  apt-get update \
-                && apt-get install -y tzdata apt-utils locales \
+                && apt-get install -y tzdata apt-utils locales --fix-missing \
                 && apt-get install -y \
                 nginx-common libmaxminddb0 libmaxminddb-dev mmdb-bin nano \
                 gcc flex make bison build-essential pkg-config g++ libtool automake autoconf git \
@@ -99,16 +99,14 @@ RUN  apt-get update \
                 libxml2-dev \
                 libssl-dev \
                 zlib1g \
-                webp \
+                ca-certificates \
+                openssl \
                 unzip \
                 libc-dev \
                 zlib1g-dev \
                 curl \
                 libxslt-dev \
-                libgd-tools \
-                libgd3 \
-                libgd-dev \
-                libgeoip-dev 
+                libgeoip-dev --fix-missing
 
 #DONLOAD
 #ENV TENGINE_VERSION=master
@@ -194,6 +192,10 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 
 RUN echo "America/Sao_Paulo" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get install ntp -y --fix-missing
+RUN echo 'server 0.centos.pool.ntp.org' >> /etc/ntp.conf
+RUN echo 'server 1.centos.pool.ntp.org' >> /etc/ntp.conf
+RUN echo 'server 2.centos.pool.ntp.org' >> /etc/ntp.conf
 
 RUN apt-get install cron
 
