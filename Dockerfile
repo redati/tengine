@@ -75,6 +75,7 @@ ENV CONFIG "\
         --add-module=modules/ngx_http_geoip2_module-master  \
         --add-module=modules/headers-more-nginx-module-master \
         --add-module=modules/naxsi-master/naxsi_src \
+        --add-module=modules/ngx_brotli \
         --with-pcre=/usr/src/pcre-8.44 \
         --with-cc-opt='-Wp,-D_FORTIFY_SOURCE=2,-fexceptions,-DTCP_FASTOPEN=23,--param=ssp-buffer-size=4' \
         "
@@ -173,21 +174,6 @@ STOPSIGNAL SIGTERM
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
-
-
-#php
-
-#RUN apt-get install -y php7.4-xmlrpc php7.4-fpm \
-#        php7.4-opcache php7.4-gd php7.4-zip php7.4-curl \
-#        php7.4-mbstring php7.4-redis php7.4-xml php7.4-soap \
-#        php7.4-dev php7.4-imap php7.4-pdo php7.4-mysql php7.4-mysqli \
-#        php7.4-bcmath php7.4-intl php7.4-xsl php7.4-apcu \
-#        php7.4-memcached  php7.4-imagick \
-#        && apt-get install -y libvips-dev \
-#        && pecl install lzf vips
-
-#limpeza
-
 
 
 RUN echo "America/Sao_Paulo" > /etc/timezone
