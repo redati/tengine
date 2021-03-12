@@ -35,15 +35,9 @@ ENV CONFIG "\
         --with-jemalloc \
         --with-http_ssl_module \
         --with-http_realip_module \
-        --with-http_addition_module \
-        --with-http_sub_module \
-        --with-http_dav_module \
-        --with-http_flv_module \
         --with-http_mp4_module \
         --with-http_gunzip_module \
         --with-http_gzip_static_module \
-        --with-http_random_index_module \
-        --with-http_secure_link_module \
         --with-http_stub_status_module \
         --with-http_auth_request_module \
         --with-http_xslt_module \
@@ -67,9 +61,7 @@ ENV CONFIG "\
         --add-module=modules/ngx_http_upstream_dynamic_module \
         --add-module=modules/ngx_http_upstream_consistent_hash_module \
         --add-module=modules/ngx_http_sysguard_module \
-        --add-module=modules/ngx_http_slice_module \
 	--add-module=modules/ngx_http_upstream_session_sticky_module \
-        --add-module=modules/ngx_aws_auth \
         --add-module=modules/ngx_devel_kit-master \
         --add-module=modules/set-misc-nginx-module-master \
         --add-module=modules/ngx_http_geoip2_module-master  \
@@ -96,7 +88,7 @@ RUN  apt-get update \
                 gcc flex make bison build-essential pkg-config g++ libtool automake autoconf git \
                 libcurl4-openssl-dev \
                 libatomic-ops-dev \
-                libjemalloc-dev \
+                libjemalloc-dev libjemalloc2 \
                 libxml2-dev \
                 libssl-dev \
                 zlib1g \
