@@ -160,7 +160,7 @@ RUN cd /usr/src/tengine-master \
         
 
 
-EXPOSE 80 443
+#EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
 
