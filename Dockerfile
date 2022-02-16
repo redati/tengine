@@ -3,7 +3,7 @@
 # acessar localhost:3142 copiar proxy correto e colar abaixo em Acquire
 # docker run -d -p 80:80 misaelgomes/tengine-php74
 
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 WORKDIR /var/www/public
 
@@ -78,28 +78,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Sao_Paulo
 
 # add-apt-repository depend software-properties-common
-RUN apt-get update && apt-get install -y software-properties-common \
-                   && add-apt-repository -y ppa:maxmind/ppa 
+RUN apt-get update && apt-get install -y software-properties-common 
+RUN add-apt-repository -y ppa:maxmind/ppa 
 
-RUN  apt-get update \
-                && apt-get install -y tzdata apt-utils locales --fix-missing \
-                && apt-get install -y \
-                nginx-common libmaxminddb0 libmaxminddb-dev mmdb-bin nano \
-                gcc flex make bison build-essential pkg-config g++ libtool automake autoconf git \
-                libcurl4-openssl-dev \
-                libatomic-ops-dev \
-                libjemalloc-dev libjemalloc2 \
-                libxml2-dev \
-                libssl-dev \
-                zlib1g \
-                ca-certificates \
-                openssl \
-                unzip \
-                libc-dev \
-                zlib1g-dev \
-                curl \
-                libxslt-dev \
-                libgeoip-dev --fix-missing
+RUN apt-get update
+RUN apt-get install -y tzdata apt-utils locales
+RUN apt-get install -y nginx-common libmaxminddb0 libmaxminddb-dev mmdb-bin nano gcc flex make bison build-essential pkg-config g++ libtool autoconf git 
+RUN apt-get install -y libcurl4-openssl-dev libatomic-ops-dev libjemalloc-dev libxml2-dev          
+RUN apt-get install -y zlib1g curl ca-certificates openssl libxslt-dev libc-dev unzip libgeoip-dev zlib1g-dev         
+RUN apt-get install -y automake autotools-dev libjemalloc2 libssl-dev  
+RUN apt-get upgrade -y 
 
 #DONLOAD
 #ENV TENGINE_VERSION=master
@@ -147,25 +135,16 @@ RUN mkdir -p /usr/src/
 COPY ./tengine/ /usr/src/
 RUN ls -l /usr/src/
 
-RUN cd /usr/src/pcre-8.44 \
-        && ./configure --enable-jit \
-        && make \
-        && make install
+RUN cd /usr/src/pcre-8.44 && ./configure --enable-jit && make && make install
 
-RUN cd /usr/src/tengine-master \
-        && ./configure $CONFIG \
-        && make \
-        && make install \
-        && rm -rf /usr/src/tengine-master 
+RUN cd /usr/src/tengine-master && ./configure $CONFIG && make && make install && rm -rf /usr/src/tengine-master 
         
-
-
 #EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
 
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+#RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+#    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 
 RUN echo "America/Sao_Paulo" > /etc/timezone
@@ -175,15 +154,10 @@ RUN echo 'server 0.centos.pool.ntp.org' >> /etc/ntp.conf
 RUN echo 'server 1.centos.pool.ntp.org' >> /etc/ntp.conf
 RUN echo 'server 2.centos.pool.ntp.org' >> /etc/ntp.conf
 
-RUN apt-get install cron
-
-RUN apt-get upgrade -y
-
-RUN apt-get remove -y gcc flex make bison build-essential pkg-config \
-        g++ libtool automake autoconf software-properties-common
-RUN apt-get remove --purge --auto-remove -y \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+RUN apt-get remove -y gcc flex make bison build-essential pkg-config
+RUN apt-get remove -y g++ libtool automake autoconf software-properties-common
+RUN apt-get remove -y git automake autotools-dev
+RUN apt-get remove --purge --auto-remove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
         
 RUN rm -fr /tmp/*
 
